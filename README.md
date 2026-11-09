@@ -60,6 +60,6 @@ Nachrichten sind JSON über WebSocket. Nach `hello` (mit `code` oder `token`) an
 - RunnerDeck → Modul: `roll`, `state`, `getActors`, `getActor`, `pushActor`.
 - Modul → RunnerDeck: `actors`, `actorState`, `ini`, `combat`, `actorData`, `pushResult`.
 
-Ein Release entsteht durch einen Tag `vX.Y.Z`. Der Workflow setzt Version und Download-Link in `module.json` und lädt `module.json` und `module.zip` hoch.
+Ein Release entsteht, sobald die Version in `module.json` erhöht und auf main gepusht wird. Der Workflow legt den Tag an, setzt den Download-Link und lädt `module.json` und `module.zip` hoch.
 
 Lizenz: MIT. Shadowrun ist eine Marke von The Topps Company, Inc. Dieses Modul ist ein inoffizielles Fanprojekt und enthält keine Inhalte aus den Regelwerken.

@@ -1,7 +1,10 @@
 name: Release
+# Neuer Release, sobald sich die Version in module.json ändert (Tag wird hier angelegt).
 on:
   push:
-    tags: ["v*"]
+    branches: [main]
+    paths: ["module.json"]
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -9,14 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Version und Download-Link in module.json setzen
+      - name: Version lesen, Download-Link setzen
         run: |
-          V="${GITHUB_REF_NAME#v}"
-          jq --arg v "$V" --arg d "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/module.zip" '.version=$v | .download=$d' module.json > m.json && mv m.json module.json
+          V=$(jq -r .version module.json)
+          echo "TAG=v$V" >> "$GITHUB_ENV"
+          jq --arg d "https://github.com/${GITHUB_REPOSITORY}/releases/download/v$V/module.zip" '.download=$d' module.json > m.json && mv m.json module.json
       - name: Paket bauen
         run: zip -r module.zip module.json scripts lang styles LICENSE README.md
       - name: Release anlegen
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" module.json module.zip --title "RunnerDeck Bridge $GITHUB_REF_NAME" --notes "Manifest-URL: https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/module.json"
+          if gh release view "$TAG" >/dev/null 2>&1; then gh release upload "$TAG" module.json module.zip --clobber; exit 0; fi
+          gh release create "$TAG" module.json module.zip --target "$GITHUB_SHA" --title "RunnerDeck Bridge $TAG" --notes "Manifest-URL: https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/module.json"

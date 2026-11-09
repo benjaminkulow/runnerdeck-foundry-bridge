@@ -3,20 +3,48 @@
   "title": "RunnerDeck Bridge",
   "description": "Verbindet Foundry VTT mit RunnerDeck (Shadowrun 6, Pixels-Würfel): Würfe als Chatkarten, Schaden, Edge und Initiative in beide Richtungen, Charakterwerte übertragen. Die Verbindung geht aus deinem Browser zu RunnerDeck auf deinem PC (127.0.0.1) – keine Portfreigabe.",
   "version": "0.1.0",
-  "authors": [{ "name": "Exion" }],
-  "compatibility": { "minimum": "13", "verified": "14" },
-  "relationships": {
-    "systems": [{ "id": "shadowrun6-eden", "type": "system", "compatibility": { "minimum": "4.0" } }]
+  "authors": [
+    {
+      "name": "Exion"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14"
   },
-  "esmodules": ["scripts/bridge.js"],
-  "styles": ["styles/bridge.css"],
+  "relationships": {
+    "systems": [
+      {
+        "id": "shadowrun6-eden",
+        "type": "system",
+        "compatibility": {
+          "minimum": "4.0"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/bridge.js"
+  ],
+  "styles": [
+    "styles/bridge.css"
+  ],
   "languages": [
-    { "lang": "de", "name": "Deutsch", "path": "lang/de.json" },
-    { "lang": "en", "name": "English", "path": "lang/en.json" }
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
   ],
   "url": "https://github.com/benjaminkulow/runnerdeck-foundry-bridge",
   "manifest": "https://github.com/benjaminkulow/runnerdeck-foundry-bridge/releases/latest/download/module.json",
   "download": "https://github.com/benjaminkulow/runnerdeck-foundry-bridge/releases/download/v0.1.0/module.zip",
   "bugs": "https://github.com/benjaminkulow/runnerdeck-foundry-bridge/issues",
-  "license": "LICENSE"
+  "license": "LICENSE",
+  "readme": "https://github.com/benjaminkulow/runnerdeck-foundry-bridge#readme"
 }
