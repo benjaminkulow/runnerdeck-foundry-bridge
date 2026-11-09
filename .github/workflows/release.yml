@@ -1,0 +1,21 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Version und Download-Link in module.json setzen
+        run: |
+          V="${GITHUB_REF_NAME#v}"
+          jq --arg v "$V" --arg d "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/module.zip" '.version=$v | .download=$d' module.json > m.json && mv m.json module.json
+      - name: Paket bauen
+        run: zip -r module.zip module.json scripts lang styles LICENSE README.md
+      - name: Release anlegen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" module.json module.zip --title "RunnerDeck Bridge $GITHUB_REF_NAME" --notes "Manifest-URL: https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/module.json"
