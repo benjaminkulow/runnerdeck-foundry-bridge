@@ -2,7 +2,7 @@
   "id": "runnerdeck-bridge",
   "title": "RunnerDeck Bridge",
   "description": "Verbindet Foundry VTT mit RunnerDeck (Shadowrun 6, Pixels-Würfel): Würfe als Chatkarten, Schaden, Edge und Initiative in beide Richtungen, Charakterwerte übertragen. Die Verbindung geht aus deinem Browser zu RunnerDeck auf deinem PC (127.0.0.1) – keine Portfreigabe.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [
     {
       "name": "Exion"

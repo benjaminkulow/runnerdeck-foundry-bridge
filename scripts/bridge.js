@@ -139,7 +139,7 @@ function rollCard(m) {
     ${m.crit ? `<div class="rdb-ban crit">${L("crit")}</div>` : m.glitch ? `<div class="rdb-ban glitch">${L("glitch")}</div>` : ""}
     ${thr ? `<div class="rdb-ban ${m.success ? "ok" : "bad"}">${thr}</div>` : ""}${ini}
     ${m.outcome ? `<div class="rdb-line rdb-out">${esc(m.outcome)}</div>` : ""}
-    ${(m.edge || []).length ? `<div class="rdb-line rdb-edge">◆ ${m.edge.map(esc).join(", ")}</div>` : ""}
+    ${(m.edge || []).length || m.edgeSpent ? `<div class="rdb-line rdb-edge">◆ ${m.edgeSpent ? "−" + esc(m.edgeSpent) + " Edge" + ((m.edge || []).length ? ": " : "") : ""}${(m.edge || []).map(esc).join(", ")}</div>` : ""}
     ${m.formula ? `<footer>${esc(m.formula)}</footer>` : ""}<footer class="rdb-src">RunnerDeck</footer></div>`;
 }
 
