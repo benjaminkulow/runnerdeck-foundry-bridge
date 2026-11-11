@@ -19,3 +19,8 @@
 .rdb-state.rdb-connected b { color: #1a8a7a; } .rdb-state.rdb-error b { color: #b5651d; }
 .rdb-err { color: #b5651d; margin: 0; }
 .rdb-btns { display: flex; flex-wrap: wrap; gap: 6px; } .rdb-btns button { flex: 1 1 auto; }
+.rdb-share .rdb-kind { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
+.rdb-share .rdb-sub { opacity: .8; font-style: italic; }
+.rdb-tab { width: 100%; border-collapse: collapse; margin: 4px 0; font-size: 12px; }
+.rdb-tab th { text-align: left; font-weight: 600; padding: 1px 6px 1px 0; white-space: nowrap; vertical-align: top; }
+.rdb-tab td { padding: 1px 0; }

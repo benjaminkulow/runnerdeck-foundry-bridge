@@ -11,6 +11,7 @@
  */
 const MOD = "runnerdeck-bridge";
 const PROTO = 1;
+const FEATURES = ["share"];   // 0.2.0: Einträge aus RunnerDeck in den Chat teilen
 
 const st = { ws: null, state: "off", error: "", retry: 0, timer: null, manual: false, rollMsgs: new Map(), app: null, info: null };
 
@@ -60,7 +61,7 @@ export async function connect({ code = "", manual = false } = {}) {
   st.ws = ws;
   ws.onopen = () => {
     send({ type: "hello", proto: PROTO, token, code: String(code || "").trim(), world: game.world.title, worldId: game.world.id, user: game.user.name, userId: game.user.id,
-      system: game.system.id, systemVersion: game.system.version, foundry: game.version, module: game.modules.get(MOD)?.version });
+      system: game.system.id, systemVersion: game.system.version, foundry: game.version, module: game.modules.get(MOD)?.version, features: FEATURES });
   };
   ws.onmessage = ev => { let m; try { m = JSON.parse(ev.data); } catch (e) { return; } onMessage(m).catch(err => console.error(`${MOD} |`, err)); };
   ws.onerror = () => { };
@@ -111,6 +112,7 @@ async function onMessage(m) {
     case "pong": return;
     case "getActors": return sendActors();
     case "roll": return postRoll(m);
+    case "share": return postShare(m);
     case "state": return applyState(m);
     case "getActor": {
       const a = game.actors.get(m.actorId);
@@ -152,6 +154,23 @@ async function postRoll(m) {
   try { const mode = game.settings.get("core", "rollMode"); if (mode && ChatMessage.applyRollMode) ChatMessage.applyRollMode(data, mode); } catch (e) { /* Einstellung heißt in neueren Versionen evtl. anders – dann öffentlich */ }
   const msg = await ChatMessage.create(data);
   if (msg) { st.rollMsgs.set(m.rollId, msg.id); if (st.rollMsgs.size > 60) st.rollMsgs.delete(st.rollMsgs.keys().next().value); }
+}
+
+// 0.2.0: geteilter Eintrag (Fertigkeit, Waffe, Zauber …) als Chatkarte; to = "all" oder "gm" (geflüstert)
+function shareCard(m) {
+  const rows = (m.rows || []).filter(r => r && r.length >= 2).map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join("");
+  return `<div class="rdb-card rdb-share">
+    <header><b>${esc(m.title)}</b>${m.kind ? `<span class="rdb-kind">${esc(m.kind)}</span>` : ""}</header>
+    ${m.sub ? `<div class="rdb-line rdb-sub">${esc(m.sub)}</div>` : ""}
+    ${rows ? `<table class="rdb-tab">${rows}</table>` : ""}
+    ${m.text ? `<div class="rdb-line">${esc(m.text)}</div>` : ""}
+    ${m.src ? `<footer>${esc(m.src)}</footer>` : ""}<footer class="rdb-src">RunnerDeck</footer></div>`;
+}
+async function postShare(m) {
+  const actor = m.actorId ? game.actors.get(m.actorId) : null;
+  const data = { speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: m.char || "RunnerDeck" }, content: shareCard(m), flags: { [MOD]: { share: true } } };
+  if (m.to === "gm") data.whisper = game.users.filter(u => u.isGM).map(u => u.id);
+  await ChatMessage.create(data);
 }
 
 const STATE_PATHS = { phys: "system.physical.dmg", stun: "system.stun.dmg", over: "system.overflow.dmg", edge: "system.edge.value", os: "system.overwatch" };

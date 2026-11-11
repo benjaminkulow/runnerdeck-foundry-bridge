@@ -5,6 +5,7 @@ Foundry-VTT-Modul, das Foundry mit **RunnerDeck** verbindet, einem Windows-Progr
 - Würfe aus RunnerDeck erscheinen als Chatkarte in Foundry (Erfolge, Würfel, Patzer, Schwellenwert, eingesetztes Edge). Wird nachträglich Edge eingesetzt, aktualisiert sich dieselbe Karte.
 - Schaden (Körperlich, Geistig, Überzählig), Edge, Initiative und Overwatch werden **in beide Richtungen** abgeglichen.
 - Kampfrunden und „du bist dran“ aus dem Kampftracker werden in RunnerDeck angezeigt.
+- Ab 0.2.0: Proben, Fertigkeiten und Gegenstände aus RunnerDeck per „All“ (an alle) oder „SL“ (nur an die Spielleitung, geflüstert) als Karte in den Chat teilen. Ältere Modulversionen ignorieren das einfach.
 - „An Foundry senden“ in RunnerDeck vergleicht Attribute, Fertigkeiten, Metatyp und Klasse mit dem Akteur, zeigt die Unterschiede und überträgt nur, was du anhakst. Fehlende Gegenstände können angelegt werden; gelöscht wird nichts.
 
 Getestet für Foundry 14 mit dem System **Shadowrun 6 (shadowrun6-eden)** 4.0.x, auch auf The Forge.
