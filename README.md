@@ -29,6 +29,10 @@ Sicherheit:
    ```
 
    Auf **The Forge**: Bazaar → „Install via Manifest“ mit derselben URL.
+
+   **Ohne Manifest-URL (direkt einspielen):** Unter [Releases](https://github.com/benjaminkulow/runnerdeck-foundry-bridge/releases/latest) die Datei `runnerdeck-bridge-vX.Y.Z.zip` herunterladen.
+   - Eigener Foundry-Server: ZIP in den Ordner `Data/modules/` entpacken (es entsteht `Data/modules/runnerdeck-bridge/`), Foundry neu starten.
+   - The Forge: forge-vtt.com/setup → „Summon Import Wizard“ → „Install found packages from the Bazaar“ ausschalten → ZIP wählen → Analyze → Import, danach den Server neu starten.
 2. Das Modul in der Welt aktivieren (Spielleitung: Module verwalten).
 3. In RunnerDeck: **Einstellungen → Foundry VTT** → „Foundry-Brücke einschalten“ → „Kopplungscode erzeugen“.
 4. In Foundry: **Spieleinstellungen → Moduleinstellungen → RunnerDeck Bridge → Verbindung** (oder `/rd` in den Chat tippen), den Code eintragen und **Verbinden** drücken.
@@ -60,6 +64,6 @@ Nachrichten sind JSON über WebSocket. Nach `hello` (mit `code` oder `token`) an
 - RunnerDeck → Modul: `roll`, `state`, `getActors`, `getActor`, `pushActor`.
 - Modul → RunnerDeck: `actors`, `actorState`, `ini`, `combat`, `actorData`, `pushResult`.
 
-Ein Release entsteht, sobald die Version in `module.json` erhöht und auf main gepusht wird. Der Workflow legt den Tag an, setzt den Download-Link und lädt `module.json` und `module.zip` hoch.
+Ein Release entsteht, sobald die Version in `module.json` erhöht und auf main gepusht wird. Der Workflow legt den Tag an, setzt den Download-Link und lädt `module.json`, `module.zip` (für die Manifest-URL) und `runnerdeck-bridge-vX.Y.Z.zip` (zum direkten Einspielen, mit Ordner) hoch.
 
 Lizenz: MIT. Shadowrun ist eine Marke von The Topps Company, Inc. Dieses Modul ist ein inoffizielles Fanprojekt und enthält keine Inhalte aus den Regelwerken.
