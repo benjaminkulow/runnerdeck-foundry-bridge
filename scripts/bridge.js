@@ -11,7 +11,7 @@
  */
 const MOD = "runnerdeck-bridge";
 const PROTO = 1;
-const FEATURES = ["share"];   // 0.2.0: Einträge aus RunnerDeck in den Chat teilen
+const FEATURES = ["share", "rollmode"];   // 0.2.0: Einträge teilen · 0.3.0: Würfelmodus aus RunnerDeck
 
 const st = { ws: null, state: "off", error: "", retry: 0, timer: null, manual: false, rollMsgs: new Map(), app: null, info: null };
 
@@ -145,13 +145,25 @@ function rollCard(m) {
     ${m.formula ? `<footer>${esc(m.formula)}</footer>` : ""}<footer class="rdb-src">RunnerDeck</footer></div>`;
 }
 
+function applyMode(data, mode) {
+  if (!mode || mode === "publicroll" || mode === "roll") return;
+  try { if (ChatMessage.applyRollMode) { ChatMessage.applyRollMode(data, mode); return; } } catch (e) { /* Fallback unten */ }
+  const gms = game.users.filter(u => u.isGM).map(u => u.id);
+  if (mode === "gmroll") data.whisper = gms;
+  else if (mode === "blindroll") { data.whisper = gms; data.blind = true; }
+  else if (mode === "selfroll") data.whisper = [game.user.id];
+}
 async function postRoll(m) {
   const actor = m.actorId ? game.actors.get(m.actorId) : null;
   const content = rollCard(m);
   const prevId = st.rollMsgs.get(m.rollId), prev = prevId && game.messages.get(prevId);
   if (prev && prev.isAuthor) { await prev.update({ content }); return; }
   const data = { speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: m.char || "RunnerDeck" }, content, flags: { [MOD]: { rollId: m.rollId } } };
-  try { const mode = game.settings.get("core", "rollMode"); if (mode && ChatMessage.applyRollMode) ChatMessage.applyRollMode(data, mode); } catch (e) { /* Einstellung heißt in neueren Versionen evtl. anders – dann öffentlich */ }
+  // 0.3.0: Würfelmodus aus RunnerDeck (publicroll / gmroll / blindroll); ohne Angabe gilt die Einstellung im Foundry-Chat
+  const ROLL_MODES = ["publicroll", "gmroll", "blindroll", "selfroll"];
+  let mode = ROLL_MODES.includes(m.rollMode) ? m.rollMode : null;
+  try { if (!mode) mode = game.settings.get("core", "rollMode"); } catch (e) { /* Einstellung heißt in neueren Versionen evtl. anders – dann öffentlich */ }
+  applyMode(data, mode);
   const msg = await ChatMessage.create(data);
   if (msg) { st.rollMsgs.set(m.rollId, msg.id); if (st.rollMsgs.size > 60) st.rollMsgs.delete(st.rollMsgs.keys().next().value); }
 }
