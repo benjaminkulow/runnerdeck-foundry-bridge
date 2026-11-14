@@ -6,6 +6,7 @@ Foundry-VTT-Modul, das Foundry mit **RunnerDeck** verbindet, einem Windows-Progr
 - Schaden (Körperlich, Geistig, Überzählig), Edge, Initiative und Overwatch werden **in beide Richtungen** abgeglichen.
 - Kampfrunden und „du bist dran“ aus dem Kampftracker werden in RunnerDeck angezeigt.
 - Ab 0.3.0: In RunnerDeck wählst du, ob Würfe an alle, an die Spielleitung oder blind an die Spielleitung gehen (sonst gilt die Einstellung im Foundry-Chat).
+- Ab 0.4.0 (Spielleitung): Gegner aus dem NSC-Assistenten von RunnerDeck direkt als Akteur anlegen (Ordner „RunnerDeck NSC“) und NSC/Critter aus Foundry in RunnerDeck holen.
 - Ab 0.2.0: Proben, Fertigkeiten und Gegenstände aus RunnerDeck per „All“ (an alle) oder „SL“ (nur an die Spielleitung, geflüstert) als Karte in den Chat teilen. Ältere Modulversionen ignorieren das einfach.
 - „An Foundry senden“ in RunnerDeck vergleicht Attribute, Fertigkeiten, Metatyp und Klasse mit dem Akteur, zeigt die Unterschiede und überträgt nur, was du anhakst. Fehlende Gegenstände können angelegt werden; gelöscht wird nichts.
 

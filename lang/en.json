@@ -41,6 +41,8 @@
     "success": "Success · {net} net hits",
     "fail": "Threshold {thr} missed",
     "illegal": "illegal",
-    "iniTotal": "Initiative {base} + {sum} = {total}"
+    "iniTotal": "Initiative {base} + {sum} = {total}",
+    "errGMOnly": "Only the GM can create actors from RunnerDeck.",
+    "created": "RunnerDeck: actor “{name}” created."
   }
 }

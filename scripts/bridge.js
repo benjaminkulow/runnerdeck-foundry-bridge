@@ -11,7 +11,7 @@
  */
 const MOD = "runnerdeck-bridge";
 const PROTO = 1;
-const FEATURES = ["share", "rollmode"];   // 0.2.0: Einträge teilen · 0.3.0: Würfelmodus aus RunnerDeck
+const FEATURES = ["share", "rollmode", "createActor", "npcActors"];   // 0.2.0: Einträge teilen · 0.3.0: Würfelmodus · 0.4.0: NSC anlegen/holen (nur Spielleitung)
 
 const st = { ws: null, state: "off", error: "", retry: 0, timer: null, manual: false, rollMsgs: new Map(), app: null, info: null };
 
@@ -110,7 +110,8 @@ async function onMessage(m) {
       ui.notifications.warn(`RunnerDeck: ${m.message || m.code}`);
       return;
     case "pong": return;
-    case "getActors": return sendActors();
+    case "getActors": return sendActors(!!m.all);
+    case "createActor": return createActor(m);
     case "roll": return postRoll(m);
     case "share": return postShare(m);
     case "state": return applyState(m);
@@ -123,11 +124,30 @@ async function onMessage(m) {
   }
 }
 
-function actorList() {
-  return game.actors.filter(a => a.isOwner && (!game.user.isGM || a.hasPlayerOwner || a.type === "Player"))
-    .map(a => ({ id: a.id, name: a.name, type: a.type, img: a.img }));
+// all: Spielleitung bekommt auch NSC/Critter (für „Gegner aus Foundry holen“ im NSC-Assistenten)
+function actorList(all) {
+  return game.actors.filter(a => a.isOwner && (!game.user.isGM || all || a.hasPlayerOwner || a.type === "Player"))
+    .map(a => ({ id: a.id, name: a.name, type: a.type, img: a.img, npc: !a.hasPlayerOwner && a.type !== "Player" }));
 }
-function sendActors() { send({ type: "actors", list: actorList() }); }
+function sendActors(all) { send({ type: "actors", list: actorList(all), all: !!all }); }
+
+// 0.4.0: NSC aus dem RunnerDeck-NSC-Assistenten als Akteur anlegen – nur die Spielleitung darf das
+async function createActor(m) {
+  if (!game.user.isGM) return send({ type: "createResult", ok: false, error: L("errGMOnly") });
+  try {
+    const data = m.data && typeof m.data === "object" ? foundry.utils.deepClone(m.data) : null;
+    if (!data || !data.name || !data.type) throw new Error("data");
+    delete data._id; delete data._stats;
+    let folder = null;
+    if (m.folder) {
+      folder = game.folders.find(f => f.type === "Actor" && f.name === m.folder) || await Folder.create({ name: String(m.folder).slice(0, 60), type: "Actor" });
+      data.folder = folder.id;
+    }
+    const a = await Actor.create(data);
+    send({ type: "createResult", ok: true, actorId: a.id, name: a.name });
+    ui.notifications.info(L("created", { name: a.name }));
+  } catch (e) { send({ type: "createResult", ok: false, error: String(e.message || e) }); }
+}
 
 function rollCard(m) {
   const dice = (m.dice || []).map(d => `<span class="rdb-die${d.hit ? " hit" : d.one ? " one" : ""}${d.extra ? " extra" : ""}">${esc(d.v)}</span>`).join("");

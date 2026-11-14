@@ -41,6 +41,8 @@
     "success": "Geschafft · {net} Nettoerfolge",
     "fail": "Schwellenwert {thr} verfehlt",
     "illegal": "illegal",
-    "iniTotal": "Initiative {base} + {sum} = {total}"
+    "iniTotal": "Initiative {base} + {sum} = {total}",
+    "errGMOnly": "Nur die Spielleitung kann Akteure aus RunnerDeck anlegen.",
+    "created": "RunnerDeck: Akteur „{name}“ angelegt."
   }
 }
